@@ -1,3 +1,6 @@
+## NOTE
+This is a work in progress
+
 ## Building
 
 Everything was built in a [cedar stack
