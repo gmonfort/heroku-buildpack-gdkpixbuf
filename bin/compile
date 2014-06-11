@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+set -e # fail fast
+
+# parse params
+BUILD_DIR=$1
+CACHE_DIR=$2
+
+# config
+S3_BUCKET="gmonfort-heroku"
+
+function indent() {
+  c='s/^/       /'
+  case $(uname) in
+    Darwin) sed -l "$c";;
+    *)      sed -u "$c";;
+  esac
+}
+
+function vendor_binary() {
+  binary="$1"
+  path="$2"
+
+  echo "Fetching $binary" | indent
+  echo "Into path $path" | indent
+
+  mkdir -p $path
+  package="https://s3.amazonaws.com/$S3_BUCKET/$binary"
+  curl $package -s -o - | tar xz -C $path -f -
+
+  echo "Exporting $binary build and include paths" | indent
+
+  if [ -d "$path/bin" ]; then
+    export PATH=$path/bin:$PATH
+  fi
+
+  if [ -d "$path/lib/pkgconfig" ]; then
+    # pkg-config should handle compiler options (if used)
+    export PKG_CONFIG_PATH="$path/lib/pkgconfig:$PKG_CONFIG_PATH"
+  fi
+
+  # standard paths
+  export CPPPATH="$path/include:$CPPPATH"
+  export CPATH="$path/include:$CPATH"
+  export CFLAGS="-I$path/include:$CFLAGS"
+  export LIBRARY_PATH="$path/lib:$LIBRARY_PATH"
+  export LD_LIBRARY_PATH="$path/lib:$LD_LIBRARY_PATH"
+}
+
+echo "-----> Vendoring binaries"
+
+# tiff-4.0.3
+# libpng-1.6.11
+# nasm-2.11.05
+# libjpeg-turbo-1.3.1
+# libffi-3.1
+# pkg-config-0.28
+# gettext-0.19
+# glib-2.40.0
+# gdk-pixbuf-2.30.8
+
+vendor_binary "tiff-4.0.3.tar.gz" "$1/vendor/tiff-4.0.3"
+vendor_binary "libpng-1.6.11.tar.gz" "$1/vendor/libpng-1.6.11"
+vendor_binary "nasm-2.11.05.tar.gz" "$1/vendor/nasm-2.11.05"
+vendor_binary "libjpeg-turbo-1.3.1.tar.gz" "$1/vendor/libjpeg-turbo-1.3.1"
+vendor_binary "libffi-3.1.tar.gz" "$1/vendor/libffi-3.1"
+vendor_binary "pkg-config-0.28.tar.gz" "$1/vendor/pkg-config-0.28"
+vendor_binary "gettext-0.19.tar.gz" "$1/vendor/gettext-0.19"
+vendor_binary "glib-2.40.0.tar.gz" "$1/vendor/glib-2.40.0"
+vendor_binary "gdk-pixbuf-2.30.8.tar.gz" "$1/vendor/gdk-pixbuf-2.30.8"
