@@ -58,7 +58,7 @@ cd libpng-1.6.11
 NAME=libpng-1.6.11
 PREFIX=$VENDOR_DIR/$NAME
 ./configure --prefix=$PREFIX --disable-static &&
-  make && sudo make install && cd ~/tmp && echo "Installed: libpng"
+  make && sudo make install
 prepare_package $NAME
 
 # NASM
@@ -67,7 +67,7 @@ cd nasm-2.11.05
 NAME=nasm-2.11.05
 PREFIX=$VENDOR_DIR/$NAME
 ./configure --prefix=$PREFIX &&
-  make && sudo make install && cd ~/tmp && echo "Installed: NASM"
+  make && sudo make install
 prepare_package $NAME
 
 # libjpeg-turbo
@@ -81,7 +81,7 @@ sed -i -e '/^docdir/     s:$:/libjpeg-turbo-1.3.1:' \
             --mandir=/usr/share/man \
             --with-jpeg8            \
             --disable-static &&
-make && sudo make install && cd ~/tmp && echo "Installed: libjpeg-turbo"
+make && sudo make install
 prepare_package $NAME
 
 # libffi
@@ -95,7 +95,7 @@ sed -e '/^includedir/ s:${libdir}/@PACKAGE_NAME@-@PACKAGE_VERSION@/include:@incl
     -e 's/^Cflags: -I${includedir}/Cflags:/' \
     -i libffi.pc.in        &&
 ./configure --prefix=$PREFIX --disable-static &&
-make && sudo make install && cd ~/tmp && echo "Installed: libffi"
+make && sudo make install
 prepare_package $NAME
 
 # pkg-config
@@ -104,7 +104,7 @@ cd pkg-config-0.28
 NAME=pkg-config-0.28
 PREFIX=$VENDOR_DIR/$NAME
 ./configure --prefix=$PREFIX --with-internal-glib &&
-make && sudo make install && cd ~/tmp && echo "Installed: pkg-config"
+make && sudo make install
 prepare_package $NAME
 
 # gettext
@@ -113,7 +113,7 @@ cd gettext-0.19
 NAME=gettext-0.19
 PREFIX=$VENDOR_DIR/$NAME
 ./configure --prefix=$PREFIX &&
-make && sudo make install && cd ~/tmp && echo "Installed: gettext"
+make && sudo make install
 prepare_package $NAME
 
 # Glib
@@ -123,7 +123,7 @@ NAME=glib-2.40.0
 PREFIX=$VENDOR_DIR/$NAME
 # ./configure --prefix=$PREFIX --with-pcre=system &&
 ./configure --prefix=$PREFIX &&
-make && sudo make install && cd ~/tmp && echo "Installed: Glib"
+make && sudo make install
 prepare_package $NAME
 
 export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
@@ -134,6 +134,6 @@ cd gdk-pixbuf-2.30.8
 NAME=gdk-pixbuf-2.30.8
 PREFIX=$VENDOR_DIR/$NAME
 ./configure --prefix=$PREFIX --with-x11 &&
-make && sudo make install && cd ~/tmp && echo "Installed: gdk-pixbuf"
+make && sudo make install
 prepare_package $NAME
 
